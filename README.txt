@@ -6,5 +6,8 @@ une categ test
 
 puis code
 
-Pommes : 131 photos persos + 158 stock
+Pommes : 131 photos persos + 158 stock (282)
 Citron : 60 photos persos
+Tomates : 50 
+Oranges : 68
+

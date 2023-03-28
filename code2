@@ -1,0 +1,66 @@
+IMAGE_SIZE = 64
+CLASSES = ['citron', 'orange', 'pomme', 'tomate']
+
+!git clone https://github.com/Thelium/DeepLearning.git
+
+import glob
+import PIL
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt 
+
+def load_data(path, classes, image_size):
+
+  # Liste les fichiers présents dans le dossier path
+  file_path = glob.glob(path)
+  print(path)
+  print(file_path)
+  
+  # Initialise les structures de données
+  x = np.zeros((len(file_path), image_size, image_size, 3))
+  y = np.zeros((len(file_path), 1))
+
+  for i in range(len(file_path)):
+    # Lecture de l'image
+    img = Image.open(file_path[i])
+    # Mise à l'échelle de l'image
+    img = img.resize((image_size, image_size), Image.ANTIALIAS)
+  
+    print(file_path[i])
+    print(np.shape(np.asarray(img)))
+    print(np.shape(x[i]))
+    # Remplissage de la variable x
+    x[i] = np.asarray(img)
+
+    img_path_split = file_path[i].split('/')
+    img_name_split = img_path_split[-1].split('.')
+    class_name = img_name_split[-2].split('(')[0]
+    class_label = classes.index(class_name)
+    
+    y[i] = class_label
+
+  return x, y
+
+x_train, y_train = load_data('./DeepLearning/Data/train/*', CLASSES, image_size=IMAGE_SIZE)
+x_val, y_val = load_data('./DeepLearning/Data/validation/*', CLASSES, image_size=IMAGE_SIZE)
+x_test, y_test = load_data('./DeepLearning/Data/test/*', CLASSES, image_size=IMAGE_SIZE)
+
+# Normalisation des entrées via une division par 255 des valeurs de pixel.
+x_train = x_train/255
+x_val = x_val/255
+x_test = x_test/255
+
+
+# Visualisation d'images chargées via git
+%matplotlib inline
+
+# Randomisation des indices et affichage de 9 images alétoires de la base d'apprentissage
+indices = np.arange(x_train.shape[0])
+np.random.shuffle(indices)
+plt.figure(figsize=(12, 12))
+for i in range(0, 9):
+    plt.subplot(3, 3, i+1)
+    plt.title(y_train[i])
+    plt.imshow(x_train[i])
+plt.tight_layout()
+plt.show()
